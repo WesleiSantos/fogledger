@@ -1,0 +1,16 @@
+FROM iotaledger/hornet
+
+# RUN apt-get update && apt-get install -y \
+#     bash \
+#     net-tools \
+#     iputils-ping \
+#     iproute2 \
+#     pwgen
+
+EXPOSE 15600/tcp
+EXPOSE 14626/udp
+EXPOSE 14265/tcp
+EXPOSE 8081/tcp
+EXPOSE 8091/tcp
+EXPOSE 1883/tcp
+EXPOSE 9029/tcp
