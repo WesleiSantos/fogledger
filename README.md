@@ -33,15 +33,15 @@ sudo pip install -U git+https://github.com/EsauM10/fogbed.git
 
 #### Build DLTs Images
 ```
-cd dlts/images
+cd dlts/images/iota/scripts
 ```
 
 ```
-chmod +x build_images.sh
+chmod +x ./private-tangle.sh
 ```
 
 ```
-./build_images.sh
+./private-tangle.sh install
 ```
 
 ## Run example

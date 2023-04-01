@@ -55,6 +55,7 @@ clean () {
   # We need to do this so that initially the permissions are user's permissions
   resetPeeringFile config/peering-node.json
   resetPeeringFile config/peering-spammer.json
+  resetPeeringFile config/peering-coo.json
 }
 
 # Sets up the necessary directories if they do not exist yet

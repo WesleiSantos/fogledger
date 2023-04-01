@@ -1,7 +1,7 @@
-Your seed BIP39 mnemonic:  level bracket various forest face ill vacant hotel pepper solution poet gesture shoe winter people digital alter tired tide seed idle eight palm brief
+Your seed BIP39 mnemonic:  shuffle pride photo item draft toilet crawl flat era oblige camera pulse mansion month cheese purse stumble direct north piece surround hammer practice crouch
 
 Your BIP32 path:           m/44'/4218'/0'/0'/0'
-Your ed25519 private key:  17d7047c37b4936393826bfbe7a219f34d456c294a924a00f7f22ae2e9d5186338aca3fb1fec41fb56aff3203a1a65081968864951b3e9009b7b4da0258f0440
-Your ed25519 public key:   38aca3fb1fec41fb56aff3203a1a65081968864951b3e9009b7b4da0258f0440
-Your ed25519 address:      e5838f2a2210c5eac44577f5be79f4c804b3b18f27050c4802c3eff29cab2574
-Your bech32 address:       atoi1qrjc8re2yggvt6kyg4mlt0ne7nyqfva33uns2rzgqtp7lu5u4vjhgqu4xur
+Your ed25519 private key:  3fb1fddb4eb737cfa5e1f9aecf1dc16984e674b93bb2c3eede096f43e81523e94d3cd583f462605e540196d2c7ef45b996484a5a90989aebbcaa3ae37c4ac473
+Your ed25519 public key:   4d3cd583f462605e540196d2c7ef45b996484a5a90989aebbcaa3ae37c4ac473
+Your ed25519 address:      f32eedf3d4568969c84244a6451d0ea5c04d70e699dbc3d567687a52480e9c77
+Your bech32 address:       atoi1qrejam0n63tgj6wggfz2v3gap6juqntsu6vahs74va5855jgp6w8w3g9ww6
