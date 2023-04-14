@@ -6,6 +6,7 @@ from fogbed import (
     setLogLevel,
 )
 import os
+import json
 
 setLogLevel('info')
 
@@ -32,6 +33,19 @@ def create_peer_conf_file(peer_conf_file, peerName1, peerID1, peerName2, peerID2
 }}\
 """)
 
+def setCooPublicKey(public_key, file_path):
+    with open(file_path, 'r') as f:
+        file_contents = f.read()
+        file_contents = file_contents.replace('"key": "{}"'.format(file_contents.split('"key": "')[1].split('"')[0]),'"key": "{}"'.format(public_key))
+    with open(file_path, 'w') as f:
+        f.write(file_contents)
+                
+def setEntryNode(node, file_path):
+    with open(file_path, "r") as f:
+        data = json.load(f)
+    data["entryNodes"] = [node]
+    with open(file_path, "w") as f:
+        json.dump(data, f, indent=4)
 
 if (__name__ == '__main__'):
     exp = FogbedExperiment()
@@ -68,7 +82,8 @@ if (__name__ == '__main__'):
                  f"{os.path.abspath('iota/db/private-tangle/coo.db')}:/app/db",
                  f"{os.path.abspath('iota/db/private-tangle')}:/app/coo-state",
                  f"{os.path.abspath('iota/p2pstore/coo')}:/app/p2pstore",
-                 f"{os.path.abspath('iota/snapshots')}:/app/snapshots"]
+                 f"{os.path.abspath('iota/snapshots')}:/app/snapshots"],
+        environment={'COO_PRV_KEYS':''}
     )
     exp.add_docker(
         container=coo,
@@ -87,6 +102,8 @@ if (__name__ == '__main__'):
                  f"{os.path.abspath('iota/p2pstore/spammer')}:/app/p2pstore",
                  f"{os.path.abspath('iota/snapshots')}:/app/snapshots"]
     )
+
+
     exp.add_docker(
         container=spammer,
         datacenter=ledger3)
@@ -103,6 +120,7 @@ if (__name__ == '__main__'):
                  f"{os.path.abspath('iota/p2pstore/node-autopeering')}:/app/p2pstore"],
         port_bindings={'14626': '14626/udp'}
     )
+    
     exp.add_docker(
         container=node_autopeering,
         datacenter=ledger4)
@@ -110,7 +128,6 @@ if (__name__ == '__main__'):
 
     # ledgers, nodes = iota.create_ledger('coo')
     # create_links(cloud, ledgers)
-
     try:
         exp.start()
 
@@ -139,6 +156,33 @@ if (__name__ == '__main__'):
             os.system(f'sudo chown 65532:65532 {os.path.abspath("iota/config/peering-node.json")}')
             os.system(f'sudo chown 65532:65532 {os.path.abspath("iota/config/peering-spammer.json")}')
         
+        #Sets the autopeering configuration
+        entry_peerID = node_autopeering.cmd(
+            f'cat node-autopeering.identity.txt | awk -F : \'{{if ($1 ~ /public key \(base58\)/) print $2}}\' | sed "s/ \+//g" | tr -d "\n" | tr -d "\r"').strip("> >")
+        multiaddr = f"/dns/node-autopeering/udp/14626/autopeering/{entry_peerID}"
+        setEntryNode(multiaddr, os.path.abspath("iota/config/config-node.json"))
+        setEntryNode(multiaddr, os.path.abspath("iota/config/config-spammer.json"))
+        
+        #Sets the Coordinator up by creating a key pair
+        coo_key_pair_file="coo-milestones-key-pair.txt"
+        coo.cmd(f'./hornet tool ed25519-key > {coo_key_pair_file}')
+        COO_PRV_KEYS = coo.cmd(f'cat {coo_key_pair_file} | awk -F : \'{{if ($1 ~ /private key/) print $2}}\' | sed "s/ \+//g" | tr -d "\n" | tr -d "\r"').strip("> >")
+        coo_public_key= coo.cmd(f'cat {coo_key_pair_file} | awk -F : \'{{if ($1 ~ /public key/) print $2}}\' | sed "s/ \+//g" | tr -d "\n" | tr -d "\r"').strip("> >")
+        os.system(f'echo {coo_public_key} > {os.path.abspath("iota/coo-milestones-public-key.txt")}'.format(coo_public_key))
+        setCooPublicKey(coo_public_key, os.path.abspath("iota/config/config-node.json"))
+        setCooPublicKey(coo_public_key, os.path.abspath("iota/config/config-spammer.json"))
+        setCooPublicKey(coo_public_key, os.path.abspath("iota/config/config-coo.json"))
+
+        # Bootstraps the coordinator
+        print("Bootstrapping the Coordinator...")
+
+        # Need to do it again otherwise the coo will not bootstrap
+        if not os.uname()[0] == 'Darwin':
+            os.system(f'sudo chown 65532:65532 {os.path.abspath("iota/p2pstore")}')
+        
+        coo.cmd(f'COO_PRV_KEYS=teste')
+        print(COO_PRV_KEYS)
+
         input('Press any key...')
         # print(node1.cmd(f'ping -c 4 {node2.ip}'))
         # exp.start_cli()

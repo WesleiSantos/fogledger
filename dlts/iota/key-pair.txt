@@ -1,7 +1,7 @@
-Your seed BIP39 mnemonic:  shuffle pride photo item draft toilet crawl flat era oblige camera pulse mansion month cheese purse stumble direct north piece surround hammer practice crouch
+Your seed BIP39 mnemonic:  recipe divert virus they slot use mountain fatigue exchange pony special drip flag wool priority pioneer brief vivid shine express recall ribbon father prepare
 
 Your BIP32 path:           m/44'/4218'/0'/0'/0'
-Your ed25519 private key:  3fb1fddb4eb737cfa5e1f9aecf1dc16984e674b93bb2c3eede096f43e81523e94d3cd583f462605e540196d2c7ef45b996484a5a90989aebbcaa3ae37c4ac473
-Your ed25519 public key:   4d3cd583f462605e540196d2c7ef45b996484a5a90989aebbcaa3ae37c4ac473
-Your ed25519 address:      f32eedf3d4568969c84244a6451d0ea5c04d70e699dbc3d567687a52480e9c77
-Your bech32 address:       atoi1qrejam0n63tgj6wggfz2v3gap6juqntsu6vahs74va5855jgp6w8w3g9ww6
+Your ed25519 private key:  e3ce131ff9c65e02d35d02fbbe8680c7be89ddf038ef954bc040e786cbb5fe16a4c9aee4a6b441e55d7ec9345aea94ff1c6c97ed2b3a4670245d0e9ff8077ab3
+Your ed25519 public key:   a4c9aee4a6b441e55d7ec9345aea94ff1c6c97ed2b3a4670245d0e9ff8077ab3
+Your ed25519 address:      a36419da7c8036b44565329e02adcf66668758a359b4957696e8d9f9efc88b8d
+Your bech32 address:       atoi1qz3kgxw60jqrddz9v5efuq4deanxdp6c5dvmf9tkjm5dn700ez9c6jeswck
