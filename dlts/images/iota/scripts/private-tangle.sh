@@ -38,13 +38,13 @@ clean () {
 
   if [ -d ./db/private-tangle ]; then
     cd ./db/private-tangle
-    removeSubfolderContent "coo.db" "node1.db" "spammer.db" "node-autopeering.db"
+    removeSubfolderContent "coo.db" "node1.db" "node2.db" "spammer.db" "node-autopeering.db"
     cd ../..
   fi
 
   if [ -d ./p2pstore ]; then
     cd ./p2pstore
-    removeSubfolderContent coo node1 spammer "node-autopeering"
+    removeSubfolderContent coo node1 node2 spammer "node-autopeering"
     cd ..
   fi
 
@@ -53,7 +53,8 @@ clean () {
   fi
 
   # We need to do this so that initially the permissions are user's permissions
-  resetPeeringFile config/peering-node.json
+  resetPeeringFile config/peering-node1.json
+  resetPeeringFile config/peering-node2.json
   resetPeeringFile config/peering-spammer.json
   resetPeeringFile config/peering-coo.json
 }
@@ -71,7 +72,7 @@ volumeSetup () {
   fi
 
   cd ./db/private-tangle
-  createSubfolders coo.db spammer.db node1.db node-autopeering.db
+  createSubfolders coo.db spammer.db node1.db node2.db node-autopeering.db
   cd ../..
 
   # Snapshots
@@ -89,7 +90,7 @@ volumeSetup () {
   fi
 
   cd ./p2pstore
-  createSubfolders coo spammer node1 node-autopeering
+  createSubfolders coo spammer node1 node2 node-autopeering
   cd ..
 
   ## Change permissions so that the Tangle data can be written (hornet user)
