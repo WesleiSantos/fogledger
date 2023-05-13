@@ -1,7 +1,7 @@
-Your seed BIP39 mnemonic:  hollow slight quick attack polar much insect spare garlic federal ensure magic lumber young calm dismiss used better debris tribe chef solid flower almost
+Your seed BIP39 mnemonic:  account expire atom twist ice guide lottery brown lion adult indoor hockey slow case sausage hover seek obscure cactus school robot simple hill happy
 
 Your BIP32 path:           m/44'/4218'/0'/0'/0'
-Your ed25519 private key:  4055d1d614727b29349cd6b3bb9f85d69bdfacde11a7dbfaca666383b1a5e2092700072968622c84547e7f22f24c798ba3b94a1adad18539f5ba1eed10bfc5d0
-Your ed25519 public key:   2700072968622c84547e7f22f24c798ba3b94a1adad18539f5ba1eed10bfc5d0
-Your ed25519 address:      28190e6245fc2669273193b12338d3a67feceb4cb53f1cbb3397d900ee2e7325
-Your bech32 address:       atoi1qq5pjrnzgh7zv6f8xxfmzgec6wn8lm8tfj6n789mxwtajq8w9eej2n46zm3
+Your ed25519 private key:  365c9ccad100f825514e530618985102f614b525db14cc0b17bf5c8d9e3703c83ff5fb7b9e660de9f6cb6d458b70c90c32e10181073831ae64bbd1ec3c64a9c2
+Your ed25519 public key:   3ff5fb7b9e660de9f6cb6d458b70c90c32e10181073831ae64bbd1ec3c64a9c2
+Your ed25519 address:      eff42fae8ba876b953d9b5c72e25fe1a1756a1efe79b136e95b4a414d63c230b
+Your bech32 address:       atoi1qrhlgtaw3w58dw2nmx6uwt39lcdpw44palnekymwjk62g9xk8s3skxvu50t

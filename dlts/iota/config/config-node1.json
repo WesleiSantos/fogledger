@@ -38,6 +38,7 @@
         }
     },
     "dashboard": {
+        "bindAddress": "0.0.0.0:8081",
         "auth": {
             "sessionTimeout": "72h",
             "username": "admin",
@@ -54,7 +55,7 @@
         "depth": 50,
         "interval": 200,
         "fullPath": "snapshots/private-tangle/full_snapshot.bin",
-        "deltaPath": "snapshots/private-tangle/delta_snapshot_spammer.bin",
+        "deltaPath": "snapshots/private-tangle/delta_snapshot.bin",
         "deltaSizeThresholdPercentage": 50.0
     },
     "protocol": {
@@ -98,31 +99,22 @@
         }
     },
     "node": {
-        "alias": "spammer",
+        "alias": "node1",
         "profile": "auto",
         "disablePlugins": [
             "WarpSync",
-            "Coordinator",
             "Profiling",
             "Prometheus",
-            "MQTT",
+            "Spammer",
+            "Coordinator",
             "ZMQ"
         ],
         "enablePlugins": [
-            "Spammer",
             "URTS",
             "RestAPI",
+            "MQTT",
             "Autopeering"
         ]
-    },
-    "spammer": {
-        "message": "one-click-tangle.",
-        "index": "HORNET Spammer",
-        "indexSemiLazy": "HORNET Spammer Semi-Lazy",
-        "cpuMaxUsage": 0.8,
-        "mpsRateLimit": 5.0,
-        "workers": 0,
-        "autostart": true
     },
     "p2p": {
         "bindMultiAddresses": [
@@ -153,11 +145,14 @@
         "routingTableRefreshPeriod": "60s"
     },
     "logger": {
-        "level": "error",
+        "level": "info",
         "disableCaller": true,
         "encoding": "console",
         "outputPaths": [
             "stdout"
         ]
+    },
+    "mqtt": {
+        "bindAddress": "0.0.0.0:1883"
     }
 }

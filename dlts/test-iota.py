@@ -17,22 +17,12 @@ def create_links(cloud: VirtualInstance, devices: List[VirtualInstance]):
         exp.add_link(device, cloud)
 
 
-def create_peer_conf_file(peer_conf_file, peerIp1, peerName1, peerID1, peerIp2, peerName2, peerID2):
+def create_peer_conf_file(peer_conf_file, peerIp, peerName, peerID):
+    with open(peer_conf_file, "r") as f:
+        data = json.load(f)
+    data["peers"].append({"alias": peerName, "multiAddress": f"/dns/{peerIp}/tcp/15600/p2p/{peerID}"})
     with open(peer_conf_file, "w") as f:
-        f.write(f"""\
-{{
-  "peers": [
-    {{
-      "alias": "{peerName1}",
-      "multiAddress": "/dns/{peerIp1}/tcp/15600/p2p/{peerID1}"
-    }},
-    {{
-      "alias": "{peerName2}",
-      "multiAddress": "/dns/{peerIp2}/tcp/15600/p2p/{peerID2}"
-    }}
-  ]
-}}\
-""")
+        json.dump(data, f, indent=4)
 
 
 def setCooPublicKey(public_key, file_path):
@@ -65,9 +55,9 @@ if (__name__ == '__main__'):
     node1 = Container(
         name='node1',
         dimage='hornet',
-        volumes=[f"{os.path.abspath('iota/config/config-node.json')}:/app/config.json:ro",
+        volumes=[f"{os.path.abspath('iota/config/config-node1.json')}:/app/config.json:ro",
                  f"{os.path.abspath('iota/config/profiles.json')}:/app/profiles.json",
-                 f"{os.path.abspath('iota/config/peering-node.json')}:/app/peering.json",
+                 f"{os.path.abspath('iota/config/peering-node1.json')}:/app/peering.json",
                  f"{os.path.abspath('iota/db/private-tangle/node1.db')}:/app/db",
                  f"{os.path.abspath('iota/p2pstore/node1')}:/app/p2pstore",
                  f"{os.path.abspath('iota/snapshots')}:/app/snapshots"],
@@ -79,6 +69,25 @@ if (__name__ == '__main__'):
         container=node1,
         datacenter=ledger1)
     exp.add_link(ledger1, cloud)
+
+    ledger5 = exp.add_virtual_instance('ledger5')
+    node2 = Container(
+        name='node2',
+        dimage='hornet',
+        volumes=[f"{os.path.abspath('iota/config/config-node2.json')}:/app/config.json:ro",
+                 f"{os.path.abspath('iota/config/profiles.json')}:/app/profiles.json",
+                 f"{os.path.abspath('iota/config/peering-node2.json')}:/app/peering.json",
+                 f"{os.path.abspath('iota/db/private-tangle/node2.db')}:/app/db",
+                 f"{os.path.abspath('iota/p2pstore/node2')}:/app/p2pstore",
+                 f"{os.path.abspath('iota/snapshots')}:/app/snapshots"],
+        port_bindings={'8081': '8082'},
+        ports=['14265', '8081', '15600', '14626/udp']
+
+    )
+    exp.add_docker(
+        container=node2,
+        datacenter=ledger5)
+    exp.add_link(ledger5, cloud)
 
     ### COO ###
     ledger2 = exp.add_virtual_instance('ledger2')
@@ -143,6 +152,8 @@ if (__name__ == '__main__'):
         # P2P identities are generated
         node1Identity = node1.cmd(
             f'./hornet tool p2pidentity-gen > node1.identity.txt && cat node1.identity.txt')
+        node2Identity = node2.cmd(
+            f'./hornet tool p2pidentity-gen > node2.identity.txt && cat node2.identity.txt')
         cooIdentity = coo.cmd(
             f'./hornet tool p2pidentity-gen > coo.identity.txt && cat coo.identity.txt')
         spammerIdentity = spammer.cmd(
@@ -151,6 +162,7 @@ if (__name__ == '__main__'):
             f'./hornet tool p2pidentity-gen > node-autopeering.identity.txt && cat node-autopeering.identity.txt')
 
         write_file(os.path.abspath('iota'), 'node1.identity.txt', node1Identity)
+        write_file(os.path.abspath('iota'), 'node2.identity.txt', node2Identity)
         write_file(os.path.abspath('iota'), 'coo.identity.txt', cooIdentity)
         write_file(os.path.abspath('iota'), 'spammer.identity.txt', spammerIdentity)
         write_file(os.path.abspath('iota'), 'node-autopeering.identity.txt', nodeAutopeeringIdentity)
@@ -158,19 +170,31 @@ if (__name__ == '__main__'):
         # Extracts the peerID from the identity file
         node1Identity = node1.cmd(
             f'cat node1.identity.txt | awk -F : \'{{if ($1 ~ /PeerID/) print $2}}\' | sed "s/ \+//g" | tr -d "\n" | tr -d "\r"').strip("> >")
+        node2Identity = node2.cmd(
+            f'cat node2.identity.txt | awk -F : \'{{if ($1 ~ /PeerID/) print $2}}\' | sed "s/ \+//g" | tr -d "\n" | tr -d "\r"').strip("> >")
         cooIdentity = coo.cmd(
             f'cat coo.identity.txt | awk -F : \'{{if ($1 ~ /PeerID/) print $2}}\' | sed "s/ \+//g" | tr -d "\n" | tr -d "\r"').strip("> >")
         spammerIdentity = spammer.cmd(
              f'cat spammer.identity.txt | awk -F : \'{{if ($1 ~ /PeerID/) print $2}}\' | sed "s/ \+//g" | tr -d "\n" | tr -d "\r"').strip("> >")
 
         # Sets the peering configuration
-        create_peer_conf_file(os.path.abspath('iota/config/peering-coo.json'),node1.ip,"node1", node1Identity, spammer.ip,"spammer", spammerIdentity)
-        create_peer_conf_file(os.path.abspath('iota/config/peering-node.json'),coo.ip,"coo", cooIdentity, spammer.ip, "spammer", spammerIdentity)
-        create_peer_conf_file(os.path.abspath('iota/config/peering-spammer.json'),node1.ip,"node1", node1Identity, coo.ip, "coo", cooIdentity)
+        create_peer_conf_file(os.path.abspath('iota/config/peering-coo.json'),node1.ip,"node1", node1Identity)
+        create_peer_conf_file(os.path.abspath('iota/config/peering-coo.json'),spammer.ip,"spammer", spammerIdentity)
+        create_peer_conf_file(os.path.abspath('iota/config/peering-coo.json'),node2.ip,"node2", node2Identity)
+        create_peer_conf_file(os.path.abspath('iota/config/peering-node1.json'),coo.ip,"coo", cooIdentity)
+        create_peer_conf_file(os.path.abspath('iota/config/peering-node1.json'),spammer.ip, "spammer", spammerIdentity)
+        create_peer_conf_file(os.path.abspath('iota/config/peering-node1.json'),node2.ip,"node2", node2Identity)
+        create_peer_conf_file(os.path.abspath('iota/config/peering-node2.json'),coo.ip,"coo", cooIdentity)
+        create_peer_conf_file(os.path.abspath('iota/config/peering-node2.json'),spammer.ip, "spammer", spammerIdentity)
+        create_peer_conf_file(os.path.abspath('iota/config/peering-node2.json'),node1.ip,"node1", node1Identity)
+        create_peer_conf_file(os.path.abspath('iota/config/peering-spammer.json'),node1.ip,"node1", node1Identity)
+        create_peer_conf_file(os.path.abspath('iota/config/peering-spammer.json'),coo.ip, "coo", cooIdentity)
+        create_peer_conf_file(os.path.abspath('iota/config/peering-spammer.json'),node2.ip,"node2", node2Identity)
 
         # We need this so that the peering can be properly updated
         if not os.uname()[0] == 'Darwin':
-            os.system(f'sudo chown 65532:65532 {os.path.abspath("iota/config/peering-node.json")}')
+            os.system(f'sudo chown 65532:65532 {os.path.abspath("iota/config/peering-node1.json")}')
+            os.system(f'sudo chown 65532:65532 {os.path.abspath("iota/config/peering-node2.json")}')
             os.system(f'sudo chown 65532:65532 {os.path.abspath("iota/config/peering-spammer.json")}')
 
         #Sets the autopeering configuration
@@ -178,7 +202,8 @@ if (__name__ == '__main__'):
         entry_peerID = node_autopeering.cmd(
             f'cat node-autopeering.identity.txt | awk -F : \'{{if ($1 ~ /public key \(base58\)/) print $2}}\' | sed "s/ \+//g" | tr -d "\n" | tr -d "\r"').strip("> >")
         multiaddr = f"/dns/{node_autopeering.ip}/udp/14626/autopeering/{entry_peerID}"
-        setEntryNode(multiaddr, os.path.abspath("iota/config/config-node.json"))
+        setEntryNode(multiaddr, os.path.abspath("iota/config/config-node1.json"))
+        setEntryNode(multiaddr, os.path.abspath("iota/config/config-node2.json"))
         setEntryNode(multiaddr, os.path.abspath("iota/config/config-spammer.json"))
 
         #start autopeering
@@ -191,7 +216,8 @@ if (__name__ == '__main__'):
         coo.cmd(f'export COO_PRV_KEYS={COO_PRV_KEYS}')
         coo_public_key= coo.cmd(f'cat {coo_key_pair_file} | awk -F : \'{{if ($1 ~ /public key/) print $2}}\' | sed "s/ \+//g" | tr -d "\n" | tr -d "\r"').strip("> >")
         os.system(f'echo {coo_public_key} > {os.path.abspath("iota/coo-milestones-public-key.txt")}'.format(coo_public_key))
-        setCooPublicKey(coo_public_key, os.path.abspath("iota/config/config-node.json"))
+        setCooPublicKey(coo_public_key, os.path.abspath("iota/config/config-node1.json"))
+        setCooPublicKey(coo_public_key, os.path.abspath("iota/config/config-node2.json"))
         setCooPublicKey(coo_public_key, os.path.abspath("iota/config/config-spammer.json"))
         setCooPublicKey(coo_public_key, os.path.abspath("iota/config/config-coo.json"))
 
@@ -217,6 +243,7 @@ if (__name__ == '__main__'):
         coo.cmd(f'./hornet > coo.log &')
         spammer.cmd(f'./hornet > spammer.log &')
         node1.cmd(f'./hornet > node1.log &')
+        node2.cmd(f'./hornet > node2.log &')
 
         input('Press any key...')
         # print(node1.cmd(f'ping -c 4 {node2.ip}'))

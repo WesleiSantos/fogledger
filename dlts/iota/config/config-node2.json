@@ -65,7 +65,7 @@
         "milestonePublicKeyCount": 1,
         "publicKeyRanges": [
             {
-                "key": "b6100a1fa60a7e4afbf1a85cfec9d159626ad7368954d31b1efc7c96748ca548",
+                "key": "f965161543a40bbe597887f74175f90c9ac1518b09042a7cfdcf2e9937e5f510",
                 "start": 0,
                 "end": 0
             }
@@ -99,7 +99,7 @@
         }
     },
     "node": {
-        "alias": "node1",
+        "alias": "node2",
         "profile": "auto",
         "disablePlugins": [
             "WarpSync",
@@ -132,7 +132,7 @@
         "autopeering": {
             "bindAddress": "0.0.0.0:14626",
             "entryNodes": [
-                "/dns/10.0.0.4/udp/14626/autopeering/ARf9ecya85RmLi8fyUUyWwBQnozPZxBp8Qx7n3v68X9t"
+                "/dns/10.0.0.5/udp/14626/autopeering/79m2eRkFWrJ8Xz3S6FV7atX6YKxDiSMfm3TzMQKgG6SU"
             ],
             "entryNodesPreferIPv6": false,
             "runAsEntryNode": false
