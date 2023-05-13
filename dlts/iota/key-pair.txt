@@ -1,7 +1,7 @@
-Your seed BIP39 mnemonic:  recipe divert virus they slot use mountain fatigue exchange pony special drip flag wool priority pioneer brief vivid shine express recall ribbon father prepare
+Your seed BIP39 mnemonic:  hollow slight quick attack polar much insect spare garlic federal ensure magic lumber young calm dismiss used better debris tribe chef solid flower almost
 
 Your BIP32 path:           m/44'/4218'/0'/0'/0'
-Your ed25519 private key:  e3ce131ff9c65e02d35d02fbbe8680c7be89ddf038ef954bc040e786cbb5fe16a4c9aee4a6b441e55d7ec9345aea94ff1c6c97ed2b3a4670245d0e9ff8077ab3
-Your ed25519 public key:   a4c9aee4a6b441e55d7ec9345aea94ff1c6c97ed2b3a4670245d0e9ff8077ab3
-Your ed25519 address:      a36419da7c8036b44565329e02adcf66668758a359b4957696e8d9f9efc88b8d
-Your bech32 address:       atoi1qz3kgxw60jqrddz9v5efuq4deanxdp6c5dvmf9tkjm5dn700ez9c6jeswck
+Your ed25519 private key:  4055d1d614727b29349cd6b3bb9f85d69bdfacde11a7dbfaca666383b1a5e2092700072968622c84547e7f22f24c798ba3b94a1adad18539f5ba1eed10bfc5d0
+Your ed25519 public key:   2700072968622c84547e7f22f24c798ba3b94a1adad18539f5ba1eed10bfc5d0
+Your ed25519 address:      28190e6245fc2669273193b12338d3a67feceb4cb53f1cbb3397d900ee2e7325
+Your bech32 address:       atoi1qq5pjrnzgh7zv6f8xxfmzgec6wn8lm8tfj6n789mxwtajq8w9eej2n46zm3
