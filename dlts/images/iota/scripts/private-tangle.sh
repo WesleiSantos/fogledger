@@ -26,9 +26,11 @@ command="$1"
 ip_address=$(echo $(dig +short myip.opendns.com @resolver1.opendns.com))
 COO_BOOTSTRAP_WAIT=10
 
-if [ -n "$2" ]; then
-  COO_BOOTSTRAP_WAIT="$2"
-fi
+nodes="$2"
+# Split the node details string
+extra_nodes=($(echo "$nodes" | tr ':' ' '))
+
+
 
 clean () {
   # We need sudo here as the files are going to be owned by the hornet user
@@ -38,13 +40,28 @@ clean () {
 
   if [ -d ./db/private-tangle ]; then
     cd ./db/private-tangle
-    removeSubfolderContent "coo.db" "node1.db" "node2.db" "spammer.db" "node-autopeering.db"
+    removeSubfolderContent "coo.db" "spammer.db" "node-autopeering.db"
+    if [ -n "${extra_nodes}" ]; then
+      for node in "${extra_nodes[@]}"; do
+        db_file="${node}.db"
+        echo "Removing ${db_file}"
+        removeSubfolderContent "${db_file}"
+      done
+    fi
     cd ../..
   fi
 
+
   if [ -d ./p2pstore ]; then
     cd ./p2pstore
-    removeSubfolderContent coo node1 node2 spammer "node-autopeering"
+    removeSubfolderContent coo spammer "node-autopeering"
+    
+    if [ -n "${extra_nodes}" ]; then
+      for node in "${extra_nodes[@]}"; do
+        echo "Removing ${node}"
+        removeSubfolderContent "${node}"
+      done
+    fi
     cd ..
   fi
 
@@ -53,10 +70,15 @@ clean () {
   fi
 
   # We need to do this so that initially the permissions are user's permissions
-  resetPeeringFile config/peering-node1.json
-  resetPeeringFile config/peering-node2.json
   resetPeeringFile config/peering-spammer.json
   resetPeeringFile config/peering-coo.json
+  if [ -n "${extra_nodes}" ]; then
+      for node in "${extra_nodes[@]}"; do
+        peering_path="config/peering-${node}.json"
+        echo "Resetting ${peering_path}"
+        resetPeeringFile "${peering_path}"
+      done
+  fi
 }
 
 # Sets up the necessary directories if they do not exist yet
@@ -67,12 +89,30 @@ volumeSetup () {
     mkdir ./db
   fi
 
+  if ! [ -d ./config ]; then
+    mkdir ./config
+  else
+    cd ./config
+    for node in "${extra_nodes[@]}"; do
+      cp config-node.json config-${node}.json
+      sed -i 's/node1/'$node'/g' config-${node}.json
+    done
+    cd ..
+  fi
+
   if ! [ -d ./db/private-tangle ]; then
     mkdir ./db/private-tangle
   fi
 
   cd ./db/private-tangle
-  createSubfolders coo.db spammer.db node1.db node2.db node-autopeering.db
+
+  createSubfolders coo.db spammer.db node-autopeering.db
+  if [ -n "${extra_nodes}" ]; then
+      for node in "${extra_nodes[@]}"; do
+        db_file="${node}.db"
+        createSubfolders "${db_file}"
+      done
+  fi
   cd ../..
 
   # Snapshots
@@ -90,7 +130,12 @@ volumeSetup () {
   fi
 
   cd ./p2pstore
-  createSubfolders coo spammer node1 node2 node-autopeering
+  createSubfolders coo spammer node-autopeering
+  if [ -n "${extra_nodes}" ]; then
+      for node in "${extra_nodes[@]}"; do
+        createSubfolders "${node}"
+      done
+  fi
   cd ..
 
   ## Change permissions so that the Tangle data can be written (hornet user)
@@ -138,7 +183,7 @@ updateContainers () {
 installTangle () {
   # First of all volumes have to be set up
   volumeSetup
-
+  
   clean
 
   # When we install we ensure container images are updated

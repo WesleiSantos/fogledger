@@ -99,7 +99,7 @@
         }
     },
     "node": {
-        "alias": "node1",
+        "alias": "node3",
         "profile": "auto",
         "disablePlugins": [
             "WarpSync",
