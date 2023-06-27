@@ -1,7 +1,7 @@
-Your seed BIP39 mnemonic:  purse suit claim annual planet waste toe tuition mosquito energy timber horror creek rigid isolate right potato drip exchange essence test army pen surprise
+Your seed BIP39 mnemonic:  prevent benefit clump smooth unit card unfair scale inhale hill runway clever fancy rally repeat worth peanut arrow planet cram lava bus oven usual
 
 Your BIP32 path:           m/44'/4218'/0'/0'/0'
-Your ed25519 private key:  47d746e94c9908b670d7c73a31d30b94cf46bf9a55c4a2708e950fad7060887128a09fd9dcb5d7b5217f8f469cda3a62ded67665546abcead1970e4087d3d4cc
-Your ed25519 public key:   28a09fd9dcb5d7b5217f8f469cda3a62ded67665546abcead1970e4087d3d4cc
-Your ed25519 address:      66033d5049b533fc4d12b3a609b145ba0e0f68b846fcf353844128fabc9f5ddd
-Your bech32 address:       atoi1qpnqx02sfx6n8lzdz2e6vzd3gkaqurmghpr0eu6ns3qj374unawa69algfq
+Your ed25519 private key:  1080b362de52794adac5a6bda23212713a36b8706e010e4401b2a2177920a3a4563bf49e19eef953452575d2f14a5876b1a665bd29faaa23255a84ecdbcd1bd5
+Your ed25519 public key:   563bf49e19eef953452575d2f14a5876b1a665bd29faaa23255a84ecdbcd1bd5
+Your ed25519 address:      8f22672667f0d32faad89ef0c0cd13d513c0b190e7282809528dc34e49da932b
+Your bech32 address:       atoi1qz8jyeexvlcdxta2mz00psxdz0238s93jrnjs2qf22xuxnjfm2fjkdex4t3

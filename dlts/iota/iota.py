@@ -106,7 +106,7 @@ class IotaBasic:
 
         ### spammer ###
         spammer = Container(
-            name='spammer',
+            name="spammer",
             dimage='hornet',
             volumes=[f"{os.path.abspath('iota/config/config-spammer.json')}:/app/config.json:ro",
                      f"{os.path.abspath('iota/config/profiles.json')}:/app/profiles.json",
@@ -182,9 +182,6 @@ class IotaBasic:
     def bootstrapCoordinator(self):
         print("Bootstrapping the Coordinator...")
         # Need to do it again otherwise the coo will not bootstrap
-        if not os.uname()[0] == 'Darwin':
-            os.system(
-                f'sudo chown 65532:65532 {os.path.abspath("iota/p2pstore")}')
         coo = self.searchNode("coo")
         if coo is not None:
             coo.cmd(

@@ -1,4 +1,4 @@
-Your p2p private key (hex):    3419350d3b02ab0b5fb620ce3b1a24192d057c4f2f3ce3d9485089849c87834e6e0adc455f64ca1c1fb21f8667f8393bb8b62b560f58b5bae0bf1eba9b3a5ffb
-Your p2p public key (hex):     6e0adc455f64ca1c1fb21f8667f8393bb8b62b560f58b5bae0bf1eba9b3a5ffb
-Your p2p public key (base58):  8QZTCmxmC8475iBNbjeRafitPdw8mJqy125P9EedUWEW
-Your p2p PeerID:               12D3KooWHDvcwuYUP2KbVbgoELPmMToisxymnzvSxcSQXDoXNSxS
+Your p2p private key (hex):    d6e7fb31e64ccb28c381472fe6a2ec6207056ac9da3147d0cb50de6dfab38ee8bfc42a7e6bb2acdda7f85f1b5398fc59ebec065de810206441e10673a3961b7a
+Your p2p public key (hex):     bfc42a7e6bb2acdda7f85f1b5398fc59ebec065de810206441e10673a3961b7a
+Your p2p public key (base58):  DuaMucyRWaqG5cntXXP1ouJkc6iVWZM6TGTuY1qAupMf
+Your p2p PeerID:               12D3KooWNiwXekZ8hV6kVWJKA88MahPb6Rm8YFRaQrpvuzz4om5b
