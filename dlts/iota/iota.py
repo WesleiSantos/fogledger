@@ -60,9 +60,6 @@ class IotaBasic:
                 name=nodeLabel,
                 dimage='hornet',
                 volumes=[
-                         f"{os.path.abspath(f'iota/config/peering-{nodeLabel}.json')}:/app/peering.json",
-                         f"{os.path.abspath(f'iota/db/private-tangle/{nodeLabel}.db')}:/app/db",
-                         f"{os.path.abspath(f'iota/p2pstore/{nodeLabel}')}:/app/p2pstore",
                          f"{os.path.abspath('iota/snapshots')}:/app/snapshots"],
                 port_bindings={'8081': f'808{index}'},
                 ports=['14265', '8081', '1883', '15600', '14626/udp']
@@ -74,10 +71,7 @@ class IotaBasic:
             name='coo',
             dimage='hornet',
             volumes=[
-                     f"{os.path.abspath('iota/config/peering-coo.json')}:/app/peering.json:ro",
-                     f"{os.path.abspath('iota/db/private-tangle/coo.db')}:/app/db",
                      f"{os.path.abspath('iota/db/private-tangle')}:/app/coo-state",
-                     f"{os.path.abspath('iota/p2pstore/coo')}:/app/p2pstore",
                      f"{os.path.abspath('iota/snapshots')}:/app/snapshots"],
             environment={'COO_PRV_KEYS': ''},
             ports=['15600']
@@ -89,9 +83,6 @@ class IotaBasic:
             name="spammer",
             dimage='hornet',
             volumes=[
-                     f"{os.path.abspath('iota/config/peering-spammer.json')}:/app/peering.json",
-                     f"{os.path.abspath('iota/db/private-tangle/spammer.db')}:/app/db",
-                     f"{os.path.abspath('iota/p2pstore/spammer')}:/app/p2pstore",
                      f"{os.path.abspath('iota/snapshots')}:/app/snapshots"],
             ports=['15600', '14626/udp']
         )
