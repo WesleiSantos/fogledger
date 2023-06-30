@@ -1,4 +1,0 @@
-Your p2p private key (hex):    c1570732fd1dff1db84acf77f3d9a59744d17615ff4ff74eabfadfda818e36491ca0c11bd92ff72653a83a91b2b2fae353cfca00fac117e5b9613aefd058b3ea
-Your p2p public key (hex):     1ca0c11bd92ff72653a83a91b2b2fae353cfca00fac117e5b9613aefd058b3ea
-Your p2p public key (base58):  2vkb5Hw3xpe4iyLJRJGpD5NaytiCNQwgXZDmw1KbjeWu
-Your p2p PeerID:               12D3KooWBk7kpRWm9iuZ8rqj3u29ysTRUDkqQ72AV9aoJzUVdbEq

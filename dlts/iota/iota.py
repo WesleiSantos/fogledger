@@ -59,8 +59,6 @@ class IotaBasic:
             node = Container(
                 name=nodeLabel,
                 dimage='hornet',
-                volumes=[
-                         f"{os.path.abspath('iota/snapshots')}:/app/snapshots"],
                 port_bindings={'8081': f'808{index}'},
                 ports=['14265', '8081', '1883', '15600', '14626/udp']
             )
@@ -70,9 +68,6 @@ class IotaBasic:
         coo = Container(
             name='coo',
             dimage='hornet',
-            volumes=[
-                     f"{os.path.abspath('iota/db/private-tangle')}:/app/coo-state",
-                     f"{os.path.abspath('iota/snapshots')}:/app/snapshots"],
             environment={'COO_PRV_KEYS': ''},
             ports=['15600']
         )
@@ -82,8 +77,6 @@ class IotaBasic:
         spammer = Container(
             name="spammer",
             dimage='hornet',
-            volumes=[
-                     f"{os.path.abspath('iota/snapshots')}:/app/snapshots"],
             ports=['15600', '14626/udp']
         )
         self.add_ledger(f'ledger-{spammer.name}', [spammer])
@@ -121,6 +114,7 @@ class IotaBasic:
         coo_key_pair_file = "coo-milestones-key-pair.txt"
         coo = self.searchNode("coo")
         if coo is not None:
+            coo.cmd('mkdir -p /app/coo-state')
             coo.cmd(f'./hornet tool ed25519-key > {coo_key_pair_file}')
             COO_PRV_KEYS = coo.cmd(
                 f'cat {coo_key_pair_file} | awk -F : \'{{if ($1 ~ /private key/) print $2}}\' | sed "s/ \+//g" | tr -d "\n" | tr -d "\r"').strip("> >")
@@ -138,6 +132,21 @@ class IotaBasic:
             print("Coordinator set up! ✅")
         else:
             print("Coordinator not found! ❌")
+
+    def copySnapshotToNodes(self):
+        print("\nCopying snapshot to each node")
+        # Executar o comando base64 no arquivo full_snapshot.bin e capturar a saída
+        command = f"base64 {os.path.abspath('iota/snapshots/private-tangle/full_snapshot.bin')}"
+        output = subprocess.run(command, capture_output=True, text=True, shell=True).stdout
+
+        # Salvar a saída em uma variável
+        output_b64 = output.strip()
+
+        for node in self.nodes.values():
+            node.cmd("mkdir -p /app/snapshots/private-tangle")
+            node.cmd(f"echo '{output_b64}' | base64 -d > /app/snapshots/private-tangle/full_snapshot.bin")
+
+        print("Snapshot copied! ✅")
 
     # Bootstraps the coordinator
     def bootstrapCoordinator(self):
@@ -173,6 +182,7 @@ class IotaBasic:
         print("\nStarting the network...")
         self.setupIdentities()
         self.extractPeerID()
+        self.copySnapshotToNodes()
         self.setupCoordinator()
         self.bootstrapCoordinator()
         self.startContainers()

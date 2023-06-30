@@ -1,7 +1,7 @@
-Your seed BIP39 mnemonic:  wife tell melody slot barely tired mechanic luggage spread crazy army motor series tuition foam tonight elite raven next morning artist guilt buffalo hidden
+Your seed BIP39 mnemonic:  umbrella decide depth pond piano mule bacon goat beef salute sauce prefer true symbol note away kid fabric exotic post define diet achieve kiss
 
 Your BIP32 path:           m/44'/4218'/0'/0'/0'
-Your ed25519 private key:  f39836c3dd77e9ed63f0f431ddb9c8dc36ef2563e40dc6dae416f6ff33b6f81b0b43887b0e1d7681dd7655b98c71963ee2e1c4e162ea8748ddb6d05e44d57f12
-Your ed25519 public key:   0b43887b0e1d7681dd7655b98c71963ee2e1c4e162ea8748ddb6d05e44d57f12
-Your ed25519 address:      6abd6e1959a35c90739ec58357ae003ad2f979af34cc3405c79cb770f4f26baf
-Your bech32 address:       atoi1qp4t6msetx34eyrnnmzcx4awqqad97te4u6vcdq9c7wtwu857f467zuye7k
+Your ed25519 private key:  d8ed2f1652500d583f07dc76f835f6cdf0b6408c2fb3988fb322ed8cd4671c01c79fd73ec3afc58514847e68fd8e6d67c35b6641b70dc87c5e7482dbaf9cf863
+Your ed25519 public key:   c79fd73ec3afc58514847e68fd8e6d67c35b6641b70dc87c5e7482dbaf9cf863
+Your ed25519 address:      8a2ff0edaa3c1854e7281dd5c8c2c13d9628053ef140dd8b118a181e9b02945c
+Your bech32 address:       atoi1qz9zlu8d4g7ps4889qwatjxzcy7ev2q98mc5phvtzx9ps85mq229cke3r86
