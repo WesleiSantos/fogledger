@@ -169,10 +169,6 @@ class IotaBasic:
             time.sleep(3)
             print(f"{node.name} is up and running! ✅")
 
-    def copyConfigurationFilesToContainers(self):
-        for node in self.nodes.values():
-            node.cmd(f'cp {os.path.abspath(f"iota/config/config-{node.name}.json")} /app/config.json')
-           
     def start_network(self):
         print("\nStarting the network...")
         self.setupIdentities()
