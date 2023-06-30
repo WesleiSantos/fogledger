@@ -38,27 +38,9 @@ class IotaBasic:
         return nodes
 
     @staticmethod
-    def write_file(file_path, file_name, text):
-        with open(file_path + '/' + file_name, 'w') as file:
-            file.write(text)
-
-    @staticmethod
-    def create_peer_conf_file(peer_conf_file, peerIp, peerName, peerID):
-        with open(peer_conf_file, "r") as f:
-            data = json.load(f)
-        data["peers"].append(
-            {"alias": peerName, "multiAddress": f"/dns/{peerIp}/tcp/15600/p2p/{peerID}"})
-        with open(peer_conf_file, "w") as f:
-            json.dump(data, f, indent=4)
-
-    @staticmethod
-    def setCooPublicKey(public_key, file_path):
-        with open(file_path, 'r') as f:
-            file_contents = f.read()
-            file_contents = file_contents.replace('"key": "{}"'.format(file_contents.split(
-                '"key": "')[1].split('"')[0]), '"key": "{}"'.format(public_key))
-        with open(file_path, 'w') as f:
-            f.write(file_contents)
+    def read_file(file_path):
+        with open(file_path, 'r') as file:
+            return file.read()
 
     def startScript(self, nodes: List[str]):
         print("starting script...")
@@ -77,8 +59,7 @@ class IotaBasic:
             node = Container(
                 name=nodeLabel,
                 dimage='hornet',
-                volumes=[f"{os.path.abspath(f'iota/config/config-{nodeLabel}.json')}:/app/config.json:ro",
-                         f"{os.path.abspath('iota/config/profiles.json')}:/app/profiles.json",
+                volumes=[
                          f"{os.path.abspath(f'iota/config/peering-{nodeLabel}.json')}:/app/peering.json",
                          f"{os.path.abspath(f'iota/db/private-tangle/{nodeLabel}.db')}:/app/db",
                          f"{os.path.abspath(f'iota/p2pstore/{nodeLabel}')}:/app/p2pstore",
@@ -92,8 +73,7 @@ class IotaBasic:
         coo = Container(
             name='coo',
             dimage='hornet',
-            volumes=[f"{os.path.abspath('iota/config/config-coo.json')}:/app/config.json:ro",
-                     f"{os.path.abspath('iota/config/profiles.json')}:/app/profiles.json:ro",
+            volumes=[
                      f"{os.path.abspath('iota/config/peering-coo.json')}:/app/peering.json:ro",
                      f"{os.path.abspath('iota/db/private-tangle/coo.db')}:/app/db",
                      f"{os.path.abspath('iota/db/private-tangle')}:/app/coo-state",
@@ -108,8 +88,7 @@ class IotaBasic:
         spammer = Container(
             name="spammer",
             dimage='hornet',
-            volumes=[f"{os.path.abspath('iota/config/config-spammer.json')}:/app/config.json:ro",
-                     f"{os.path.abspath('iota/config/profiles.json')}:/app/profiles.json",
+            volumes=[
                      f"{os.path.abspath('iota/config/peering-spammer.json')}:/app/peering.json",
                      f"{os.path.abspath('iota/db/private-tangle/spammer.db')}:/app/db",
                      f"{os.path.abspath('iota/p2pstore/spammer')}:/app/p2pstore",
@@ -127,11 +106,7 @@ class IotaBasic:
     def setupIdentities(self):
         print("\nGenerating P2P identities for each node")
         for node in self.nodes.values():
-            nodeIdentity = node.cmd(
-                f'./hornet tool p2pidentity-gen > {node.name}.identity.txt && cat {node.name}.identity.txt')
-            arq_name = f'{node.name}.identity.txt'
-            path = os.path.abspath('iota')
-            IotaBasic.write_file(path, arq_name, nodeIdentity)
+            node.cmd(f'./hornet tool p2pidentity-gen > {node.name}.identity.txt')
         print("P2P identities generated! ✅")
 
     # Extracts the peerID from the identity file
@@ -142,20 +117,12 @@ class IotaBasic:
                 f'cat {node_ext.name}.identity.txt | awk -F : \'{{if ($1 ~ /PeerID/) print $2}}\' | sed "s/ \+//g" | tr -d "\n" | tr -d "\r"').strip("> >")
             for node_int in self.nodes.values():
                 if node_int.name != node_ext.name:
-                    IotaBasic.create_peer_conf_file(os.path.abspath(
-                        f'iota/config/peering-{node_int.name}.json'), node_ext.ip, node_ext.name, peerID)
+                    json_data = node_int.cmd(f'cat /app/peering.json').strip("> >")
+                    json_data = json.loads(json_data)
+                    json_data["peers"].append({"alias": node_ext.name, "multiAddress": f"/dns/{node_ext.ip}/tcp/15600/p2p/{peerID}"})
+                    updated_data = json.dumps(json_data)
+                    node_int.cmd(f"echo \'{updated_data}\' | jq . > /app/peering.json")
         print("peerID extracted! ✅")
-
-    # We need this so that the peering can be properly updated
-    def setPermissions(self):
-        if not os.uname()[0] == 'Darwin':
-            print("\nSetting permissions for the peering files")
-            for node in self.nodes.values():
-                path = os.path.abspath(f"iota/config/peering-{node.name}.json")
-                if os.path.exists(path):
-                    os.system(
-                        f'sudo chown 65532:65532 {os.path.abspath(f"iota/config/peering-{node.name}.json")}')
-            print("Permissions set! ✅")
 
     # Sets the Coordinator up by creating a key pair
     def setupCoordinator(self):
@@ -172,8 +139,11 @@ class IotaBasic:
             os.system(
                 f'echo {coo_public_key} > {os.path.abspath("iota/coo-milestones-public-key.txt")}'.format(coo_public_key))
             for node in self.nodes.values():
-                IotaBasic.setCooPublicKey(coo_public_key, os.path.abspath(
-                    f"iota/config/config-{node.name}.json"))
+                json_data = IotaBasic.read_file(os.path.abspath(f"iota/config/config-{node.name}.json"))
+                json_data = json.loads(json_data)
+                json_data["protocol"]["publicKeyRanges"][0]["key"] = coo_public_key
+                updated_data = json.dumps(json_data)
+                node.cmd(f"echo \'{updated_data}\' | jq . > /app/config.json")
             print("Coordinator set up! ✅")
         else:
             print("Coordinator not found! ❌")
@@ -208,11 +178,14 @@ class IotaBasic:
             time.sleep(3)
             print(f"{node.name} is up and running! ✅")
 
+    def copyConfigurationFilesToContainers(self):
+        for node in self.nodes.values():
+            node.cmd(f'cp {os.path.abspath(f"iota/config/config-{node.name}.json")} /app/config.json')
+           
     def start_network(self):
         print("\nStarting the network...")
         self.setupIdentities()
         self.extractPeerID()
-        self.setPermissions()
         self.setupCoordinator()
         self.bootstrapCoordinator()
         self.startContainers()
