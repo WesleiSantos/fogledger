@@ -1,20 +1,20 @@
 {
-    "peers": [
-        {
-            "alias": "node1",
-            "multiAddress": "/dns/10.0.0.1/tcp/15600/p2p/12D3KooWEEjqFctBsTRcDHPt4JbATYDX5zN87GGy8gsCtHCUPWBo"
-        },
-        {
-            "alias": "node2",
-            "multiAddress": "/dns/10.0.0.2/tcp/15600/p2p/12D3KooWNiwXekZ8hV6kVWJKA88MahPb6Rm8YFRaQrpvuzz4om5b"
-        },
-        {
-            "alias": "coo",
-            "multiAddress": "/dns/10.0.0.4/tcp/15600/p2p/12D3KooWMRcCuxGnAtQHtt8GMqKt7791NGnnSQWs1p1VJkxMhQoT"
-        },
-        {
-            "alias": "spammer",
-            "multiAddress": "/dns/10.0.0.5/tcp/15600/p2p/12D3KooWHPvQXw9YucpsXX7soKDUGAWewXkqiAWH7uGMaHKpjeXb"
-        }
-    ]
+  "peers": [
+    {
+      "alias": "node1",
+      "multiAddress": "/dns/10.0.0.1/tcp/15600/p2p/12D3KooWHW5FSAwzRUZJZ3BPtQRGYV1Kp7mTr9qcUvGc4YHkPJE1"
+    },
+    {
+      "alias": "node2",
+      "multiAddress": "/dns/10.0.0.2/tcp/15600/p2p/12D3KooWD2TU7Pg1DbX2Bi6E9zPCQDtDiYuhmgmvXKL5yrV15rPh"
+    },
+    {
+      "alias": "coo",
+      "multiAddress": "/dns/10.0.0.4/tcp/15600/p2p/12D3KooWFWP9eCrSdSDWf2cKzQwQG2FRDkndXkwf6EQcJEqpN4WS"
+    },
+    {
+      "alias": "spammer",
+      "multiAddress": "/dns/10.0.0.5/tcp/15600/p2p/12D3KooWKLKYcdAmgzfX94hJWovbAHtxzambiHMJrJGrAvaugJkH"
+    }
+  ]
 }
